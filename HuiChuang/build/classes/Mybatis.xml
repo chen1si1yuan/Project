@@ -1,0 +1,52 @@
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                        http://www.springframework.org/schema/tx
+                        http://www.springframework.org/schema/tx/spring-tx.xsd
+                        http://www.springframework.org/schema/task                 
+                        http://www.springframework.org/schema/task/spring-task.xsd">
+	<context:property-placeholder location="classpath:Mysql.properties" />
+	<context:component-scan base-package="Securitys"></context:component-scan>
+<bean id="securityConfig" class="Securitys.SecurityConfig"></bean>
+  
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${dataSource.driverClassName}"></property>
+		<property name="username" value="${dataSource.username}"></property>
+		<property name="password" value="${dataSource.password}"></property>
+		<property name="url" value="${dataSource.url}"></property>
+		<!-- 最大并发连接数 -->
+		<property name="maxActive" value="${dataSource.maxActive}" />
+		<!-- 初始化连接数量 -->
+		<property name="initialSize" value="${dataSource.initialSize}" />
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="${dataSource.maxWait}" />
+		<!-- 最小空闲连接数 -->
+		<property name="minIdle" value="${dataSource.minIdle}" />
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+
+		<property name="mapperLocations" value="classpath:Mapping/*.xml"></property>
+	</bean>
+
+	<!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="Dao" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>
+	
+<!-- 配置spring的PlatformTransactionManager，名字为默认值 -->  
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+        <property name="dataSource" ref="dataSource" />  
+    </bean>  
+      
+    <!-- 开启事务控制的注解支持 -->  
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+</beans>

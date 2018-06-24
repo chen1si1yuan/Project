@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE 
+    mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Dao.ShopMemberDao">
+	<select id="findShopMember" parameterType="java.lang.String"
+		resultType="Pojo.ShopMember">
+		select id,mobile,pwd from ims_ewei_shop_member where
+		mobile=#{mobile}
+	</select>
+	<insert id="insertShopMember" parameterType="Pojo.ShopMember"
+		keyColumn="id" useGeneratedKeys="true">
+		insert into
+		ims_ewei_shop_member(id,mobile,pwd,salt,datavalue,updateaddress,uniacid)
+		values(#{id},#{mobile},#{pwd},#{salt},#{datavalue},#{updateaddress},#{uniacid})
+	</insert>
+	<update id="updateShopMember" parameterType="Pojo.ShopMember">
+	update ims_ewei_shop_member 
+	<set>
+	<if test="pwd!=null">pwd=#{pwd}</if>
+	</set>
+	where mobile=#{mobile}
+	</update>
+	<select id="todayRegister" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+	select count(*) from ims_ewei_shop_member where createtime>#{time}
+	
+	</select>
+
+</mapper>

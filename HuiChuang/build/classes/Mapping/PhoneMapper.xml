@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE 
+    mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Dao.PhoneDao">
+	<select id="findPhone" resultType="Pojo.Phone">
+		select * from phone where
+		exist !=1
+	</select>
+	<select id="sellPhoneCount" resultType="java.lang.Integer">
+		select count(*) from
+		phone where exist =1
+	</select>
+	<insert id="insertPhone" parameterType="Pojo.Phone" keyColumn="id"
+		useGeneratedKeys="true">
+		insert into phone(phonenumber,exist)
+		values(#{phonenumber},#{exist})
+	</insert>
+	<update id="updatePhoneExit" parameterType="java.lang.String">
+		update phone set
+		exist=1 where phonenumber=#{phonenumber}
+	</update>
+	<select id="phoneExit" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select exist from
+		phone where
+		phonenumber=#{phonenumber}
+	</select>
+	<select id="findPhoneByVague" parameterType="java.lang.String" resultType="Pojo.Phone">
+		select * from phone where
+		phonenumber like CONCAT(CONCAT('%', #{text}), '%')
+	</select>
+</mapper>

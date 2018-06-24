@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE 
+    mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Dao.NewUserDao">
+	<insert id="insertNewUser" parameterType="Pojo.NewUser"
+		keyColumn="id" useGeneratedKeys="true">
+		insert into
+		newuser(grade,money,count,buyphone,recommendid,oldphone)
+		values(#{grade},#{money},#{count},#{buyphone},#{recommendid},#{oldphone})
+	</insert>
+	<select id="findById" parameterType="java.lang.Integer"
+		resultType="Pojo.NewUser">
+		select * from newuser where id=#{id}
+	</select>
+	<select id="findByOldphone" parameterType="java.lang.String"
+		resultType="Pojo.NewUser">
+		select * from newuser where oldphone=#{oldphone}
+	</select>
+	<update id="updateMoney" parameterType="Pojo.NewUser">
+		update newuser
+		<set>
+			<if test="money!=null and money!=0">money=#{money},</if>
+			<if test="count!=null">count=#{count},</if>
+		</set>
+		where id=#{id}
+	</update>
+	<update id="buyPhone" parameterType="Pojo.NewUser">
+		update newuser
+		<set>
+			<if test="buyphone!=null">buyphone=#{buyphone},</if>
+		</set>
+		where oldphone=#{oldphone}
+	</update>
+	<select id="gradeCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+	select count(*) from newuser where grade=#{grade}
+	</select>
+	<select id="gradeInfo" parameterType="java.lang.Integer" resultType="Pojo.NewUser">
+	select * from newuser where grade=#{grade}
+	</select>
+	<update id="updategrade" parameterType="Pojo.NewUser">
+		update newuser
+		<set>
+			<if test="grade!=null">grade=#{grade},</if>
+			<if test="recommendid!=null">recommendid=#{recommendid},</if>
+		</set>
+		where id=#{id}
+	</update>
+</mapper>
