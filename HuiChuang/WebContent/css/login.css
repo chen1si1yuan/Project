@@ -1,0 +1,120 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+html,
+body {
+  background: #f2f2f2;
+  /* width: 100%;
+  height: 100%; */
+}
+
+.login{
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* 用户登录 */
+.login-header {
+  margin: 0 auto;
+  text-align: center;
+  padding: 20px;
+}
+.logo-img {
+  width: 100px;
+  /* margin: 0 auto; */
+}
+
+.login-main {
+  width: 375px;
+  margin: 0 auto;
+  padding: 110px 0;
+}
+.layui-form-item {
+  position: relative;
+}
+.layui-icon-username,
+.layui-icon-password,
+.layui-icon-cellphone,
+.layui-icon-vercode {
+  position: absolute;
+  padding: 0;
+  left: 1px;
+  top: 1px;
+  width: 38px;
+  line-height: 36px;
+  text-align: center;
+  color: #d2d2d2;
+}
+
+.layui-input {
+  padding-left: 38px;
+  border-radius: 100px;
+  /* min-height: 40px;
+  line-height: 40px; */
+  margin-bottom: 25px;
+}
+
+.login-more {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.layui-text {
+  color: #1e9fff;
+}
+.register {
+  margin-right: 100px;
+}
+
+.login-footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  line-height: 30px;
+  padding: 20px;
+  text-align: center;
+  box-sizing: border-box;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.login-footer a {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+/* 用户注册 */
+.getcode {
+  margin-left: 15px;
+}
+
+.Agreement {
+  padding-left: 10px;
+  margin-top: -20px;
+}
+
+.layui-form-checkbox[lay-skin='primary']:hover i {
+  border-color: #1e9fff;
+  color: #fff;
+}
+
+.layui-form-checked[lay-skin='primary'] i {
+  border-color: #1e9fff;
+  background-color: #1e9fff;
+  color: #fff;
+}
+
+.getcode button {
+  /* border-radius: 20px;
+  border: none; */
+  margin-top: 1px;
+}
+
+@media screen and (max-width: 768px) {
+}
+.login-main {
+  width: 300px;
+  padding-top: 60px;
+  /* padding-bottom: 0; */
+}
