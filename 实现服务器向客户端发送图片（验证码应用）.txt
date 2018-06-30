@@ -1,0 +1,34 @@
+
+
+  服务器端向客户端发送
+        String createTypeFlag = request.getParameter("createTypeFlag");//接收客户端传递的createTypeFlag标识
+        //1.在内存中创建一张图片
+        BufferedImage bi = new BufferedImage(WIDTH, HEIGHT,BufferedImage.TYPE_INT_RGB);
+        //2.得到图片
+        Graphics g = bi.getGraphics();
+        //3.设置图片的背影色
+        setBackGround(g);
+        //4.设置图片的边框
+        setBorder(g);
+        //5.在图片上画干扰线
+        drawRandomLine(g);
+        //6.写在图片上随机数
+        //String random = drawRandomNum((Graphics2D) g,"ch");//生成中文验证码图片
+        //String random = drawRandomNum((Graphics2D) g,"nl");//生成数字和字母组合的验证码图片
+        //String random = drawRandomNum((Graphics2D) g,"n");//生成纯数字的验证码图片
+        //String random = drawRandomNum((Graphics2D) g,"l");//生成纯字母的验证码图片
+        String random = drawRandomNum((Graphics2D) g,createTypeFlag);//根据客户端传递的createTypeFlag标识生成验证码图片
+        //7.将随机数存在session中
+        request.getSession().setAttribute("checkcode", random);
+        //8.设置响应头通知浏览器以图片的形式打开
+        response.setContentType("image/jpeg");//等同于response.setHeader("Content-Type", "image/jpeg");
+        //9.设置响应头控制浏览器不要缓存
+        response.setDateHeader("expries", -1);
+        response.setHeader("Cache-Control", "no-cache");
+        response.setHeader("Pragma", "no-cache");
+        //10.将图片写给浏览器
+        ImageIO.write(bi, "jpg", response.getOutputStream());
+
+
+客户端接收
+<img alt="验证码看不清，换一张" src="${pageContext.request.contextPath}/servlet/DrawImage" id="validateCodeImg" onclick="changeImg()">

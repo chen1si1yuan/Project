@@ -1,0 +1,84 @@
+
+
+第一种：添加如下的JavaScript代码来防止表单重复提交
+ <script type="text/javascript">
+        var isCommitted = false;//表单是否已经提交标识，默认为false
+       function dosubmit(){
+          if(isCommitted==false){
+               isCommitted = true;//提交表单后，将表单是否已经提交标识设置为true
+               return true;//返回true让表单正常提交
+           }else{
+                return false;//返回false那么表单将不提交
+           }
+        }
+     </script>
+
+
+  <form action="${pageContext.request.contextPath}/servlet/DoFormServlet" onsubmit="return dosubmit()" method="post">
+        用户名：<input type="text" name="username">
+        <input type="submit" value="提交" id="submit">
+    </form>
+
+
+
+
+第二种：将提交按钮设置为不可用
+function dosubmit(){
+    //获取表单提交按钮
+    var btnSubmit = document.getElementById("submit");
+    //将表单提交按钮设置为不可用，这样就可以避免用户再次点击提交按钮
+    btnSubmit.disabled= "disabled";
+    //返回true让表单可以正常提交
+    return true;
+}
+
+
+
+
+
+第三种：session处理 （重要）
+package xdp.gacl.session;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class FormServlet extends HttpServlet {
+    private static final long serialVersionUID = -884689940866074733L;
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String token = TokenProccessor.getInstance().makeToken();//创建令牌
+        System.out.println("在FormServlet中生成的token："+token);
+        request.getSession().setAttribute("token", token);  //在服务器使用session保存token(令牌)
+        request.getRequestDispatcher("/form.jsp").forward(request, response);//跳转到form.jsp页面
+    }
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
+    }
+
+}
+
+
+ <form action="${pageContext.request.contextPath}/servlet/DoFormServlet" method="post">
+        <%--使用隐藏域存储生成的token--%>
+        <%--
+            <input type="hidden" name="token" value="<%=session.getAttribute("token") %>">
+        --%>
+        <%--使用EL表达式取出存储在session中的token--%>
+        <input type="hidden" name="token" value="${token}"/> 
+        用户名：<input type="text" name="username"> 
+        <input type="submit" value="提交">
+    </form>
+
+
+
+详情请查阅网站：http://www.cnblogs.com/xdp-gacl/p/3855702.html
+
+
+

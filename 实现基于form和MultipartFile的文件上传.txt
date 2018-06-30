@@ -1,0 +1,33 @@
+
+
+
+第一步：前端代码：
+<form method = "post" action="${pageContext.request.contextPath }/Student/upload.do" enctype="multipart/form-data">    
+选择文件:<input type="file" name="file">  
+  <input type="submit" value="提交">  
+   </form>
+
+
+
+第二步：后台代码：
+@RequestMapping("/upload1")
+	 public void fileUpload( @RequestParam("file") MultipartFile file,HttpServletRequest request) {   
+		// 判断文件是否为空   
+		System.out.println("11");
+		if (!file.isEmpty()) {    
+			try {          
+				// 文件保存路径          
+			String path = request.getSession().getServletContext().getRealPath("fileUpload");  
+		        String fileName = file.getOriginalFilename();  
+		        System.out.println(path);  
+		        String filePath = request.getSession().getServletContext().getRealPath("/") + file.getOriginalFilename();          // 转存文件      
+		        file.transferTo(new File(filePath));  
+				System.out.println("提交成功");
+				} 
+			catch (Exception e) {    
+				e.printStackTrace();  
+				}   
+			}    
+
+		  }  
+ 

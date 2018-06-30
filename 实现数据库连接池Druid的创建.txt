@@ -1,0 +1,36 @@
+
+第一步：配置数据库连接参数
+dataSource.password=chwy123456
+dataSource.username=server_user
+dataSource.databaseName=user_db
+dataSource.driverClassName=com.mysql.jdbc.Driver
+dataSource.dialect=org.hibernate.dialect.MySQL5Dialect
+dataSource.serverName=119.29.143.235:3306
+dataSource.url=jdbc:mysql://119.29.143.235:3306/user_db
+dataSource.properties=user=${dataSource.username};databaseName=${dataSource.databaseName};serverName=${dataSource.serverName};password=${dataSource.password}
+dataSource.hbm2ddl.auto=update
+dataSource.maxActive:20
+dataSource.initialSize:1
+dataSource.maxWait:60000
+dataSource.minIdle:10
+dataSource.maxIdle:15
+
+第二步：导入druid-1.1.2.jar包
+
+
+
+第三步：配置datasource
+<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
+                           <property name="driverClassName" value="${dataSource.driverClassName}"></property>
+                           <property name="username" value="${dataSource.username}"></property>
+                           <property name="password" value="${dataSource.password}"></property>
+                           <property name="url" value="${dataSource.url}"></property>
+                           <!-- 最大并发连接数 -->
+                           <property name="maxActive" value="${dataSource.maxActive}" />
+                           <!-- 初始化连接数量 -->
+                           <property name="initialSize" value="${dataSource.initialSize}" />
+                           <!-- 配置获取连接等待超时的时间 -->
+                           <property name="maxWait" value="${dataSource.maxWait}" />
+                           <!-- 最小空闲连接数 -->
+                           <property name="minIdle" value="${dataSource.minIdle}" />  
+                         </bean>

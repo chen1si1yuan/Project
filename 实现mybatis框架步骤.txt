@@ -1,0 +1,233 @@
+导入mybatis.jar 和mybatis-spring.jar   注意版本兼容性问题  
+
+第一步：配置web.xml文件
+            ：1.加载扫描主配置文件  <context-param>
+                                     <param-name>contextConfigLocation</param-name>
+                                     <param-value>classpath:spring-mybatis.xml</param-value>
+                                    </context-param>
+
+              2.加载servlet跳转文件  <servlet>
+                                   <servlet-name>SpringMVC</servlet-name>
+                                     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+                                     <init-param>
+                                       <param-name>contextConfigLocation</param-name>
+                                       <param-value>classpath:spring-mvc.xml</param-value>
+                                     </init-param>
+                                     <load-on-startup>1</load-on-startup>
+                                     <async-supported>true</async-supported>
+                                   </servlet>
+
+              3.加载控制器映射和映射监听等   <servlet-mapping>
+                                               <servlet-name>SpringMVC</servlet-name>
+                                               <!-- 此处也可以配置成 *.do 形式 -->
+                                               <url-pattern>*.do</url-pattern>
+                                             </servlet-mapping>
+
+                                             <!-- 编码过滤器 -->
+                                             <filter>
+                                               <filter-name>encodingFilter</filter-name>
+                                               <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+                                               <init-param>
+                                                 <param-name>encoding</param-name>
+                                                 <param-value>UTF-8</param-value>
+                                               </init-param>
+                                             </filter>
+                                             <filter-mapping>
+                                               <filter-name>encodingFilter</filter-name>
+                                               <url-pattern>/*</url-pattern>
+                                             </filter-mapping>
+
+                                             <!-- spring监听器 mybatis配置文件需要使用 重要-->  
+                                               <listener>
+                                               <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+                                             </listener>
+
+                                             <!-- 防止spring内存溢出监听器，比如quartz -->
+                                             <listener>
+                                               <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+                                             </listener>
+
+
+  第二步：编写Spring配置文件（扫描加载控制器和视图配置及其他）
+
+                   头缀
+                   <?xml version="1.0" encoding="UTF-8"?>
+         <beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+                        http://www.springframework.org/schema/mvc
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+                   <!-- 自动扫描  @Controller-->
+                   <context:component-scan base-package="com.Controller"/>
+
+                   <!-- 定义跳转的文件的前后缀 ，视图模式配置 -->
+                   <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                     <property name="prefix" value="/WEB-INF/jsp/" />
+                     <property name="suffix" value=".jsp"/>
+                   </bean>
+
+
+  第三步：编写Spring-mybatis配置文件
+
+
+          头缀
+     <?xml version="1.0" encoding="UTF-8"?>
+     <beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                        http://www.springframework.org/schema/tx
+                        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+         ：1.加载自动扫描（依赖注入）  <!-- 自动扫描 -->
+                                                                  <context:component-scan base-package="com"/>
+                                                                  <!-- 扫描加载数据库连接数据 -->
+                                                                  <context:property-placeholder location="classpath:Mysql.properties"/>
+
+         ：2.配置数据源  <!-- 配置数据源 -->
+                         <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+                           <property name="driverClassName" value="${dataSource.driverClassName}"></property>
+                           <property name="username" value="${dataSource.username}"></property>
+                           <property name="password" value="${dataSource.password}"></property>
+                           <property name="url" value="${dataSource.url}"></property>
+                         </bean>
+
+         ：3.扫描加载mybatis的xml配置文件
+                        <!-- mybatis和spring完美整合，不需要mybatis的配置映射文件 -->
+                        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+                          <property name="dataSource" ref="dataSource"/>
+                          <!-- 自动扫描mapping.xml文件 -->
+                          <property name="mapperLocations" value="classpath:com/dao/*.xml"></property>
+                        </bean>
+
+         ：4.配置会话工厂
+                        <!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+                        <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+                          <property name="basePackage" value="com.dao"/>
+                          <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+                        </bean>
+
+
+
+  第四步：编写需要的实体类并构造setter和getter函数
+
+
+  
+  第五步：编写对应的函数方法的接口
+                           @Service
+                           public interface UserMapper {
+	                       <！-- 该方法必须用@Param("id") 以便能传入配置文件的值-->
+	                     public User FindUser(@Param("id")int id);
+
+                                           }
+
+
+  第六步：编写对应的配置文件：
+                     <?xml version="1.0" encoding="UTF-8" ?>
+                     <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+                     <mapper namespace="com.dao.UserMapper">
+                       <select id="FindUser" parameterType="int" resultType="com.pojo.User">  <!-- 参数从左到右依次是 id：方法名（与接口中方法对应） parameterType：        传入值得类型  resultType：返回结果的类型（可以是类 会依次给属性赋值）-->
+                          select * from test where id = #{id}
+                       </select>
+                     </mapper>
+
+
+
+  第七步：编写一个融汇所有方法的接口  如
+          public interface UserService {
+	    public User FindUser(int id);
+
+         }
+
+
+  第八步：实现第七步接口方法   如
+                   @Service
+                   @Transactional(rollbackFor = Exception.class)
+                   public class UserServiceImpl implements UserService{
+
+	              @Resource
+	              private UserMapper userMapper;
+	 
+	
+
+	              @Override
+	              public User FindUser(int id) {
+		      // TODO Auto-generated method stub
+		      return userMapper.FindUser(id);
+	         }
+	
+                 }
+
+
+
+  第九步：编写控制器Controller
+      如
+               @Controller
+               @RequestMapping("/csy")
+               public class MyController {
+
+ 
+                  @Autowired
+                  private UserService userService;
+
+                  @RequestMapping("/show")
+                  public void showUser(){
+       
+                  User user = userService.FindUser(2);
+      
+                  System.out.println(user.getName());
+                }
+                      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    

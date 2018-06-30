@@ -1,0 +1,65 @@
+
+
+
+第一步：编写派生了HttpServletRequestWrapper接口的类，并增强request功能，使得request.getparameter(String)获取得到的值经过过滤
+ class DirtyRequest extends HttpServletRequestWrapper{
+
+       
+        private HttpServletRequest request;
+        public DirtyRequest(HttpServletRequest request) {
+            super(request);
+            this.request = request;
+        }
+        /* 重写getParameter方法，实现对敏感字符的过滤
+         * @see javax.servlet.ServletRequestWrapper#getParameter(java.lang.String)
+         */
+        @Override
+        public String getParameter(String name) {
+            
+            String value = this.request.getParameter(name);
+            if(value==null){
+                return null;
+            }
+           
+                if(value.contains("猪")){
+                    System.out.println("内容中包含敏感词："+"猪"+"，将会被替换成****");
+                    //替换敏感字符
+                    value = value.replace("猪", "****");
+                }
+            
+            return value;
+        }
+    }
+}
+
+
+
+第二步：编写经过派生了Filter接口的类 ，在doFilter中允许执行请求，但将request参数改写为增强功能的request参数（即DirtyRequest）
+ @Override
+    public void doFilter(ServletRequest req, ServletResponse resp,
+            FilterChain chain) throws IOException, ServletException {
+        
+        HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) resp;
+        DirtyRequest dirtyrequest = new DirtyRequest(request);
+        
+        chain.doFilter(dirtyrequest, response);
+    }
+
+
+
+
+第三步：在web.xml配置文件中进行filter过滤器的初始化配置
+ <filter>
+      <filter-name>DirtyFilter</filter-name>
+      <filter-class>cn.chwyteam.www.Filter.DirtyWordsFilter</filter-class>
+  </filter> 
+  <filter-mapping>
+      <filter-name>DirtyFilter</filter-name>
+      <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+
+
+
+详情请查阅网址：http://www.cnblogs.com/xdp-gacl/p/3952405.html

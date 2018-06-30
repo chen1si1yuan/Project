@@ -1,0 +1,17 @@
+
+
+                                              重定向（浏览器路径）
+    response.sendRedirect(request.getContextPath()+"/index.jsp");
+         浏览器响应 不可用response.sendRedirect("/index.jsp");   浏览器得到的路径是服务器地址（主机地址）即http://192.168.37.53/index.jsp  从而报错
+
+
+
+                                              请求转发（服务器路径）
+    this.getServletContext().getRequestDispatcher("/test.jsp");
+    request.getRequestDispatcher("/test.jsp").forward(request, response);
+
+
+    请求重定向和请求转发的区别
+
+　　一个web资源收到客户端请求后，通知服务器去调用另外一个web资源进行处理，称之为请求转发/307。
+　　一个web资源收到客户端请求后，通知浏览器去访问另外一个web资源进行处理，称之为请求重定向/302。

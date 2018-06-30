@@ -1,0 +1,51 @@
+
+
+
+Servlet注解的作用在于取消在web.xml文件中的过多配置 ，只用在类上加入注解即可
+
+
+Listener的注解配置：
+import javax.servlet.annotation.WebListener;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
+
+@WebListener
+public class MyHttpSessionListener implements HttpSessionListener{
+
+    @Override
+    public void sessionCreated(HttpSessionEvent se) {
+        System.out.println("创建session ");
+    }
+
+    @Override
+    public void sessionDestroyed(HttpSessionEvent se) {
+        System.out.println("销毁session ");
+    }
+
+
+
+
+Filter的注解配置：
+
+@WebFilter(filterName = "filter1", urlPatterns="/*",
+        dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD},
+        initParams={@WebInitParam(name="account",value="1234"),@WebInitParam(name="hotusm",value="1234")}
+        )
+
+public class MyFilter implements Filter {
+
+
+
+
+
+Servlet的注解配置：
+@WebServlet(name = "servlet1", urlPatterns = {"/url1", "/url2","url3/*"}, loadOnStartup = 1,
+        initParams = {
+                @WebInitParam(name = "name", value="hotusm")
+        })
+public class MyServlet extends HttpServlet {
+
+
+
+
+详情请查阅网站：https://www.cnblogs.com/zr520/p/6095977.html

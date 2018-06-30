@@ -1,0 +1,33 @@
+
+   
+                              本文项目名称统一为：CSY   服务器地址为：http://192.168.37.53
+ 
+                                           服务器端
+ 第一种  "/"代表链接至项目名称处  
+        例：ServletContext.getRealPath("/download/1.JPG")   获取地址为：http://192.168.37.53/CSY/download/1.JPG
+         
+          服务器端获取项目名称方法：1.this.getServletContext().getRealPath("/download/1.JPG");
+                                    2.request.getContextPath();
+         
+          服务器端跳转到其他页面：this.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+
+          重定向问题：
+        response.sendRedirect(request.getContextPath()+"/index.jsp");
+         浏览器响应 不可用response.sendRedirect("/index.jsp");   浏览器得到的路径是服务器地址（主机地址）即http://192.168.37.53/index.jsp  从而报错
+
+
+
+
+                                           客户端
+          “/”代表链接至服务器地址处
+          例：<a href="/index.jsp">跳转到首页</a>  获取地址为：http://192.168.37.53/index.jsp（报错！！！！！）
+            应该为：<a href="/CSY/index.jsp">跳转到首页</a> 
+
+          客户端获取项目名称方法：${pageContext.request.contextPath}   获取当前页面上下文路径  即客户端路径为                                    http://192.168.37.53/CSY/
+                  <a href="${pageContext.request.contextPath}/index.jsp">跳转到首页</a>
+
+
+详情请查阅网站：http://www.cnblogs.com/xdp-gacl/p/3791993.html
+
+
+

@@ -1,0 +1,25 @@
+
+
+第一步：前台页面导入jquery-3.2.1.min.js和json.js
+         <script type="text/javascript" src="${pageContext.request.contextPath }/JS/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="${pageContext.request.contextPath }/JS/json.js"></script>
+
+
+第二步：编写json数据传送函数
+例：var s={"UserName":$("#UserName").val(),"UserPwd":$("#UserPwd").val()};
+	 var st=JSON.stringify(s);
+     var a={"RequestTime":"","LoginType":"","RequestType":"Login","User":st};
+	 $.post("web/UserRequest.do", {"Request":JSON.stringify(a)},
+	 function(data)
+	   {
+		 var json=JSON.parse(data);
+		 if(json.statu=="true")
+			 {
+			     window.location.href='./UserMain.jsp';
+			 }
+		 else
+			 {
+			     alert(json.statu);
+			 }
+	  }
+	 );

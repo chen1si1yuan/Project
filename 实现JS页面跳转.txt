@@ -1,0 +1,89 @@
+
+
+
+第一种：
+
+<script language="javascript" type="text/javascript"> 
+window.location.href="jb51.jsp?backurl="+window.location.href; 
+</script> 
+
+
+
+第二种：
+
+<script language="javascript"> 
+alert("返回"); 
+window.history.back(-1); 
+</script> 
+
+
+第三种：
+
+
+<script language="javascript"> 
+window.navigate("jb51.jsp"); 
+</script> 
+
+
+
+第四种：
+
+<script language="JavaScript"> 
+self.location='jb51.htm'; 
+</script> 
+
+
+
+第五种：
+
+<script language="javascript"> 
+alert("非法访问！"); 
+top.location='jb51.jsp'; 
+</script> 
+
+
+
+第六种：网址从传参获得并转向 
+
+<script language="javascript" type="text/javascript"> 
+function request(paras){ 
+var url = location.href; 
+var paraString = url.substring(url.indexOf("?")+1,url.length).split("&"); 
+var paraObj = {} 
+for (i=0; j=paraString[i]; i++){ 
+paraObj[j.substring(0,j.indexOf("=")).toLowerCase()] = j.substring(j.indexOf("=")+1,j.length); 
+} 
+var returnValue = paraObj[paras.toLowerCase()]; 
+if(typeof(returnValue)=="undefined"){ 
+return ""; 
+}else{ 
+return returnValue; 
+} 
+} 
+var theurl 
+theurl=request("url"); 
+if (theurl!=''){ 
+location=theurl 
+} 
+</script> 
+
+
+第七种:javascript中弹出选择框跳转到其他页面
+<script language="javascript"> 
+
+function logout()...{ 
+if (confirm("你确定要注销身份吗？是－选择确定，否-选择取消"))...{ 
+window.location.href="logout.asp?act=logout" 
+} 
+}
+
+</script>
+
+
+
+第八种：页面延迟跳转
+window.setTimeout("window.location='index.shtml'",2000);
+//两秒后跳转新页面
+
+
+详情请查阅网站：https://www.cnblogs.com/liuhongfeng/p/5231736.html

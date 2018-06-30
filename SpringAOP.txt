@@ -1,0 +1,31 @@
+
+
+第一步：导入aspectj.jar aspectjweaver.jar cglib-nodep_.ja包
+
+
+
+第二步：
+Spring。xml中导入xmlns:aop="http://www.springframework.org/schema/aop"
+和http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+
+
+
+第三步：
+spring。xml中配置<aop:aspectj-autoproxy/>
+
+
+
+第四步创建AOP类
+类上用@aspect和@service注解   @pointcut定义切入点   @before @after @around定义通知
+例：@Pointcut("execution(* Controller.*.*(..))")
+	public void excepution()
+	{
+		
+	}
+	
+	@Around("excepution()")
+	public void returnjson(ProceedingJoinPoint joinpoint,HttpServletResponse response) throws IOException
+	{}
+
+

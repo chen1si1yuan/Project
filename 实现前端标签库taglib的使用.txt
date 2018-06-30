@@ -1,0 +1,52 @@
+
+
+声明定义taglib，调用sun公司标签库：
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+
+
+（1）表达式控制标签：out标签、set标签、remove标签、catch标签。
+　　　　（2）流程控制标签：if标签、choose标签、when标签、otherwise标签。
+　　　　（3）循环标签：forEach标签、forTokens标签。
+　　　　（4）URL操作标签：import标签、url标签、redirect标签、param标签。
+
+
+
+《c:if》标签
+<c:if test="true">
+ ssss
+ </c:if>
+ <c:if test="false">
+ fffff
+ </c:if>
+
+
+
+<c:choose><c:when><c:otherwise>标签
+<c:choose>
+  <c:when test="true">
+  sss
+  </c:when>
+  <c:otherwise>
+  ssfff
+  </c:otherwise>
+ </c:choose>
+
+
+
+ <%--迭代存储在pageContext对象中的data集合 --%>
+         <c:foreach items="${data}" var="str">
+             ${str}<br/>
+         </c:foreach>
+
+
+
+
+<c:out>直译输出
+<c:out value="<a href='http://www.cnblogs.com'>访问博客园</a>"></c:out>   即显示<a href='http://www.cnblogs.com'>访问博客园</a>  并不是一个连接 而是字符串
+
+
+
+
+
+详情请查阅网站：http://www.cnblogs.com/xdp-gacl/p/3943390.html
